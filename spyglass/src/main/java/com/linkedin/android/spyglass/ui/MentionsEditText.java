@@ -21,6 +21,7 @@ import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
@@ -67,7 +68,7 @@ import java.util.Locale;
  * @attr ref R.styleable#MentionsEditText_selectedMentionTextColor
  * @attr ref R.styleable#MentionsEditText_selectedMentionTextBackgroundColor
  */
-public class MentionsEditText extends EditText implements TokenSource {
+public class MentionsEditText extends AppCompatEditText implements TokenSource {
 
     private Tokenizer mTokenizer;
     private QueryTokenReceiver mQueryTokenReceiver;

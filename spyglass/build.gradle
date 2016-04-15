@@ -3,6 +3,9 @@ apply plugin: 'idea'
 apply plugin: 'org.robolectric'
 apply plugin: 'maven'
 
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -53,10 +56,45 @@ android {
     }
 }
 
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId GROUP
+            version = VERSION_NAME
+            artifactId project.getName()
+
+            // Tell maven to prepare the generated "*.aar" file for publishing
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+        }
+    }
+}
+
+artifactory {
+    contextUrl = artifactory_url
+    publish {
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('aar')
+            publishArtifacts = true
+
+            // Publish generated POM files to Artifactory (true by default)
+            publishPom = true
+        }
+        repository {
+            // The Artifactory repository key to publish to
+            repoKey = 'libs-release-local'
+
+            username = artifactory_user
+            password = artifactory_password
+        }
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:support-annotations:23.0.'
+    compile 'com.android.support:appcompat-v7:23.3.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
